@@ -1,0 +1,23 @@
+#express files
+/package-lock.json
+
+#Sonar and coverage related files
+/.sonar-scanner
+/coverage
+.nyc_output
+# MacOS custom attributes
+.DS_Store
+
+# Node modules
+/node_modules
+
+
+
+# Local  files
+/.env
+/assets
+
+/todo.js
+
+#visual studio  files 
+/.vscode
