@@ -76,7 +76,6 @@ userSchema.methods={
             return '';
         }
         try{
-            console.log(this.salt);
             return crypto.createHmac('sha256',this.salt)
                 .update(password)
                 .digest('hex');

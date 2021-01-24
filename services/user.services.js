@@ -1,6 +1,9 @@
 const UserModel = require('../models/user.model');
 const mongooseUtilities = require('../shared/mongooseUtilities');
 const {statusCodes,responseMessages} = require('../shared/constants');
+const utilityMethods = require('../shared/utilityMethods');
+const {config} = require('../loaders/config');
+
 const userServices ={
     register : async (params)=>{
         const {
@@ -54,6 +57,53 @@ const userServices ={
         }
         await mongooseUtilities.create(UserModel,userData);
         return [{message: 'User is successfully registered'},statusCodes.success];
+    },
+    login : async (params)=>{
+        const {
+            username,
+            phoneNumber,
+            password
+        } =  params;
+
+        //mandatory fields missing
+        if((!username && !phoneNumber)||!password){
+            let error = new 
+            Error(responseMessages.parametersMissing+' : username/phoneNumber/password');
+            error.statusCode =statusCodes.badRequest;
+            throw error;
+        }
+        const condition = {};
+        username&&(condition.username=username);
+        phoneNumber&&(condition.phoneNumber=phoneNumber);
+        const userData = await mongooseUtilities
+            .findFirstRecord(UserModel,condition ,null ,{lean: false});
+
+        // Validating encrypted password   
+        if(!userData.authenticate(password)){
+            let error = new 
+            Error('Invalid credentials');
+            error.statusCode =statusCodes.unauthorized;
+            throw error;
+        }
+        const jwtPayLoad = { _id: userData._id.toString() };
+        const jwtOptions ={
+            expiresIn : 60*60*1000 // 1 hour in milliiseconds 
+        };
+        const response = {
+            message : 'User is successfully logged in',
+            user    : {
+                ...userData._doc,
+                salt          : undefined,
+                encryPassword : undefined,
+                createdAt     : undefined,
+                updatedAt     : undefined,
+                __v           : undefined
+
+            },
+            token     : utilityMethods.generateJwtToken(jwtPayLoad,config.jwtSecret,jwtOptions),
+            expiresIn : jwtOptions.expiresIn + (2*60*1000) // adding 2 mins grace time to expires in
+        };
+        return [response,statusCodes.success];
     }
 };
 module.exports = userServices;

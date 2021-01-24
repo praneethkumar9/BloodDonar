@@ -3,7 +3,8 @@ const envVariables =  process.env;
 const  config =  {
     mongoDbUrl : envVariables.MONGO_DB_URL,
     database   : envVariables.DATABASE,
-    env        : envVariables.ENVIRONMENT
+    env        : envVariables.ENVIRONMENT,
+    jwtSecret  : envVariables.JWT_SECRET
 };
 
 /**
