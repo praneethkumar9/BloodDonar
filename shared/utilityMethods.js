@@ -4,7 +4,8 @@ const jwt = require('jsonwebtoken');
  */
 const utilityMethods = {
 
-    generateJwtToken : (payload,secret,options=null) =>jwt.sign( payload, secret, options)
+    generateJwtToken        : (payload,secret,options=null) =>jwt.sign( payload, secret, options),
+    generateDecodedJwtToken : (token,secret) =>jwt.verify( token, secret)
   
 };
 module.exports = utilityMethods;

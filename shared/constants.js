@@ -18,9 +18,9 @@ const responseMessages = {
     errorOccured                  : 'error Occured',
     serviceUpMessage              : 'service endpoint is up',
     serviceDownMessage            : 'service endpoint or server is down',
-    validateTokenProblemMessage   : 'problem in validating token',
-    invalidTokenMessage           : 'Invalid token',
-    tokenMissingMessage           : 'Token is missing',
+    validateTokenProblemMessage   : 'Problem in validating token provided . Please check the token',
+    invalidTokenMessage           : 'Invalid authorization token provided',
+    expiredTokenMessage           : 'Expired token provided',
     serviceConnectingErrorMessage : 'Error in connecting the service',
     generateTokenErrorMessage     : 'problem in generating token',
     serverUpMessage               : 'Blood donar backend server is up'
