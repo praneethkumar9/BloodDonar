@@ -1,6 +1,7 @@
 #express files
 /package-lock.json
 
+
 #Sonar and coverage related files
 /.sonar-scanner
 /coverage
