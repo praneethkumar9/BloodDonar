@@ -1,4 +1,4 @@
-const usersRouter = require('./users');
+const usersRouter = require('./users.router');
 const routes = (app) =>{
     // Add headers
     app.use((req, res, next) => {

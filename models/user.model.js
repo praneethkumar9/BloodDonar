@@ -1,6 +1,6 @@
 const {Schema,model} = require('mongoose');
 const { isEmailValidator} = require('../shared/mongooseUtilities');
-const uuidv1 = require('uuid/v1');
+const {v4:uuid} = require('uuid');
 const crypto = require('crypto');
 
 const userSchema = new Schema({
@@ -11,7 +11,7 @@ const userSchema = new Schema({
         minlength : 4 
     },
     phoneNumber : {
-        type      : Number,
+        type      : String,
         required  : [true,'Phonenumber is required'],
         trim      : true,
         minlength : 10,
@@ -31,7 +31,7 @@ const userSchema = new Schema({
         default : true
     },
     encryPassword : {
-        type     : Boolean,
+        type     : String,
         required : [true,'Password is required']
     },
     salt  : String,
@@ -56,23 +56,27 @@ const userSchema = new Schema({
 },
 { timestamps: true });
 
+
 userSchema.virtual('password')
-    .set((password)=>{
+    .set(function(password){
         this._password = password;
-        this.salt = uuidv1();
+        this.salt = uuid();
         this.encryPassword = this.securePassword(password);
     })
-    .get(()=>{
+    .get(function(){
         return this._password ;
     });
 
 userSchema.methods={
-    authenticate   : (password)=>this.securePassword(password)===this.encryPassword,
-    securePassword : (password)=>{
+    authenticate : function(password){
+        return this.securePassword(password)===this.encryPassword;
+    },
+    securePassword : function(password){
         if(!password){
             return '';
         }
         try{
+            console.log(this.salt);
             return crypto.createHmac('sha256',this.salt)
                 .update(password)
                 .digest('hex');

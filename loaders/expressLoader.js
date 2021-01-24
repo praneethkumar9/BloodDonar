@@ -11,6 +11,8 @@ const logger = require('morgan');
 //Express routes
 const routes = require('../routes/index');
 
+//loading models into express app
+require('../models/user.model');
 
 //shared modules
 const responseUtil= require('../shared/responseUtil');
