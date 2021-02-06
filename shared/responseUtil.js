@@ -11,7 +11,6 @@ const {statusCodes,responseMessages} = require('../shared/constants');
     * @returns error message with error code 
     */
 const sendError =  ( err,res,req ) =>  {
-
     // Checking whether any custom status code or assign 500 error code
     let statusCode =err.statusCode||500;
     // Error response object
@@ -24,6 +23,9 @@ const sendError =  ( err,res,req ) =>  {
             mongoSchema  : err._message.split(' validation failed')[0],
             mongoError   : true
         };
+    }
+    if(err.driver && err.code){
+        errorMessage.mongoError = true;
     }
     // Error response object modification if API is not found
     if(statusCode == statusCodes.notFound){
